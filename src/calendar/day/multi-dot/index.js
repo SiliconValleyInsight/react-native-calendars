@@ -49,8 +49,15 @@ class Day extends Component {
       const validDots = marking.dots.filter(d => (d && d.color));
       return validDots.map((dot, index) => {
         return (
-          <View key={dot.key ? dot.key : index} style={[baseDotStyle, 
-            { backgroundColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color}]}/>
+          <View key={dot.key ? dot.key : index} style={[baseDotStyle,
+              dot.border
+              ? {
+                  backgroundColor: this.style.background,
+                  borderWidth: 1,
+                  borderColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color
+              }
+              : { backgroundColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color}
+          ]} />
         );
       });
     }
@@ -76,8 +83,8 @@ class Day extends Component {
       textStyle.push(this.style.todayText);
     }
     return (
-      <TouchableOpacity 
-        style={containerStyle} 
+      <TouchableOpacity
+        style={containerStyle}
         onPress={this.onDayPress}
         onLongPress={this.onDayLongPress}>
         <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
