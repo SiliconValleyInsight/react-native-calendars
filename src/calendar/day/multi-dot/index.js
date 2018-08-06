@@ -50,7 +50,14 @@ class Day extends Component {
       return validDots.map((dot, index) => {
         return (
           <View key={dot.key ? dot.key : index} style={[baseDotStyle,
-            { backgroundColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color}]}/>
+            dot.border
+            ? {
+                backgroundColor: this.style.background,
+                borderWidth: 1,
+                borderColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color
+            }
+            : { backgroundColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color}
+          ]} />
         );
       });
     }
