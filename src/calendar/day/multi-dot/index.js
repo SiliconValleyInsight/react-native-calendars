@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {
   TouchableOpacity,
   Text,
-  View
+  View,
+  StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -49,15 +50,19 @@ class Day extends Component {
       const validDots = marking.dots.filter(d => (d && d.color));
       return validDots.map((dot, index) => {
         return (
-          <View key={dot.key ? dot.key : index} style={[baseDotStyle,
-            dot.border
-            ? {
-                backgroundColor: this.style.background,
-                borderWidth: 1,
-                borderColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color
-            }
-            : { backgroundColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color}
-          ]} />
+          <View
+            key={dot.key ? dot.key : index}
+            style={[
+              baseDotStyle,
+              dot.border
+              ? {
+                  backgroundColor: this.style.background,
+                  borderWidth: 1,
+                  borderColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color
+              }
+              : { backgroundColor: marking.selected && dot.selectedDotColor ? dot.selectedDotColor : dot.color}
+            ]}
+          />
         );
       });
     }
@@ -70,12 +75,20 @@ class Day extends Component {
 
     const marking = this.props.marking || {};
     const dot = this.renderDots(marking);
+    let selectedBackgroundStyle = {}
 
     if (marking.selected) {
-      containerStyle.push(this.style.selected);
+      // By default set background color for the whole container (TouchableOpacity),
+      // but we need only for the text. So we need to add a View parent container for this reason.
+      /* containerStyle.push(this.style.selected); */
+      selectedBackgroundStyle = this.style.selected
       textStyle.push(this.style.selectedText);
       if (marking.selectedColor) {
-        containerStyle.push({backgroundColor: marking.selectedColor});
+        /* containerStyle.push({backgroundColor: marking.selectedColor}); */
+        selectedBackgroundStyle = {
+          ...selectedBackgroundStyle,
+          ...{ backgroundColor: marking.selectedColor }
+        }
       }
     } else if (typeof marking.disabled !== 'undefined' ? marking.disabled : this.props.state === 'disabled') {
       textStyle.push(this.style.disabledText);
@@ -88,11 +101,27 @@ class Day extends Component {
         style={containerStyle}
         onPress={this.onDayPress}
         onLongPress={this.onDayLongPress}>
-        <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
-        <View style={{flexDirection: 'row'}}>{dot}</View>
+        <View style={[styles.textWrapper, selectedBackgroundStyle]}>
+          <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
+        </View>
+        <View style={styles.dots}>{dot}</View>
       </TouchableOpacity>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  textWrapper: {
+    width: '90%',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 2
+  },
+  dots: {
+    flexDirection: 'row',
+    position: 'relative',
+    top: -2
+  }
+})
 
 export default Day;
