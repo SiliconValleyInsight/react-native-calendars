@@ -40,8 +40,12 @@ class CalendarList extends Component {
 
     // Whether the scroll is horizontal
     horizontal: PropTypes.bool,
+
     // Dynamic calendar height
     calendarHeight: PropTypes.number,
+
+    // https://facebook.github.io/react-native/docs/flatlist#viewabilityconfig
+    viewabilityConfig: PropTypes.object
   };
 
   static defaultProps = {
@@ -54,6 +58,7 @@ class CalendarList extends Component {
     scrollEnabled: true,
     scrollsToTop: false,
     removeClippedSubviews: Platform.OS === 'android' ? false : true,
+    viewabilityConfig: { viewAreaCoveragePercentThreshold: 50 }
   }
 
   constructor(props) {
@@ -211,6 +216,7 @@ class CalendarList extends Component {
         horizontal={this.props.horizontal}
         pagingEnabled={this.props.pagingEnabled}
         onViewableItemsChanged={this.onViewableItemsChangedBound}
+        viewabilityConfig={this.props.viewabilityConfig}
         renderItem={this.renderCalendarBound}
         showsVerticalScrollIndicator={this.props.showScrollIndicator}
         showsHorizontalScrollIndicator={this.props.showScrollIndicator}
